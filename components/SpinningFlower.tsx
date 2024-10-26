@@ -1,5 +1,4 @@
 'use client'
-
 // components/SpinningFlower.js
 import React, { useEffect, useState } from 'react';
 
@@ -9,9 +8,9 @@ const SpinningFlower = () => {
   const [output, setOutput] = useState("");
 
   const renderFlower = () => {
-    const rows = 20; // Vertical size
-    const cols = 40; // Horizontal size
-    const baseRadius = 10; // Base radius for the round effect
+    const rows = 20; // Adjust this for vertical size
+    const cols = 40; // Adjust this for horizontal size
+    const radius = 10; // Radius to create a rounder shape
 
     let result = "";
 
@@ -20,13 +19,10 @@ const SpinningFlower = () => {
 
     for (let y = 0; y < rows; y++) {
       let row = "";
-      // Calculate a dynamic radius based on row position to create vertical compression
-      const dynamicRadius = baseRadius * (1 - Math.abs(y - rows / 2) / (rows / 2));
-      
       for (let x = 0; x < cols; x++) {
-        // Apply the dynamic radius in the x position calculation for rounding effect
-        const xPos = (x - cols / 2) / dynamicRadius;
-        const yPos = (y - rows / 2) / baseRadius;
+        // Center coordinates
+        const xPos = (x - cols / 2) / radius;
+        const yPos = (y - rows / 2) / radius;
 
         // Calculate spherical distance from the center
         const distance = Math.sqrt(xPos * xPos + yPos * yPos);
@@ -35,12 +31,13 @@ const SpinningFlower = () => {
         const angle = Math.atan2(yPos, xPos) + t;
         const depthEffect = Math.sin(distance * 2 - angle * 3);
 
-        // Map distance and depth to ASCII characters, keeping index in bounds
-        let charIndex = Math.floor((depthEffect + 1) * (chars.length / 2));
-        charIndex = Math.max(0, Math.min(chars.length - 1, charIndex)); // Ensures within bounds
+        // Map distance and depth to ASCII characters
+        const charIndex = Math.floor(
+          (depthEffect + 1) * (chars.length / 2)
+        );
 
         // Use modulo to cycle through the ASCII character array
-        row += chars[charIndex];
+        row += chars[charIndex % chars.length];
       }
       result += row + "\n"; // Add a newline at the end of each row
     }
